@@ -1,7 +1,9 @@
 var express = require("express");
 const desRouter = require("./routers/des");
+var cors = require("cors");
 
 const app = express();
+app.options("*", cors());
 app.use(express.json());
 const port = process.env.PORT;
 
