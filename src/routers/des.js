@@ -80,7 +80,7 @@ function sendEncryptedMessage(toEmail, message) {
     from: process.env.EMAIL,
     to: toEmail,
     subject: "Encrypted Message",
-    text: `This is an encrypted message. A decryption key has been sent to you via SMS.\n\n${message}`,
+    text: `This is an encrypted message.\nA decryption key has been sent to you via SMS.\n\n${message}`,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
