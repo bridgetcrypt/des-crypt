@@ -4,7 +4,8 @@ const express = require("express");
 var cryptoJS = require("crypto-js");
 //nodemailer package helps in sending emails
 var nodemailer = require("nodemailer");
-
+//CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options
+var cors = require("cors");
 //creates a new instance of router that helps managing server endpoints
 const router = new express.Router();
 
@@ -15,7 +16,7 @@ const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
 const client = require("twilio")(accountSid, authToken);
 
 //creating the first endpoint that manages encryption requests
-router.get("/encrypt", async (req, res) => {
+router.get("/encrypt", cors(), async (req, res) => {
   const message = req.query.message;
   const key = req.query.key;
   const email = req.query.email;
@@ -32,7 +33,7 @@ router.get("/encrypt", async (req, res) => {
 });
 
 //creating the second endpoint that manages decryption requests
-router.get("/decrypt", async (req, res) => {
+router.get("/decrypt", cors(), async (req, res) => {
   const cipherText = req.query.cipherText;
   const key = req.query.key;
   var originalText = decryptMessage(cipherText, key);
