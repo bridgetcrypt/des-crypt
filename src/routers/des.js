@@ -44,7 +44,7 @@ router.get("/decrypt", cors(corsOptions), async (req, res) => {
   var originalMessage = decryptMessage(cipherMessage, key);
 
   //error checking. If text is "", then encryption was unsuccessful
-  if (originalText == "") {
+  if (originalMessage == "") {
     res.status(400).send("Could not decrypt message");
   } else {
     res.status(200).send(originalMessage);
