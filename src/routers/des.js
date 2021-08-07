@@ -76,7 +76,6 @@ function sendKey(key, phoneNumber) {
 
 //send the encrypted message via email
 function sendEncryptedMessage(toEmail, message) {
-  throw "Could not send message";
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
