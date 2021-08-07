@@ -4,8 +4,9 @@ const express = require("express");
 var cryptoJS = require("crypto-js");
 //nodemailer package helps in sending emails
 var nodemailer = require("nodemailer");
-//CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options
+//cors provides a express middleware that can be used to enable CORS with various options
 var cors = require("cors");
+//only allow requests from originating from https://bridgetcrypt.github.io
 var corsOptions = {
   origin: "https://bridgetcrypt.github.io",
   optionsSuccessStatus: 200,
@@ -26,11 +27,11 @@ router.get("/encrypt", cors(corsOptions), async (req, res) => {
   const email = req.query.email;
   const phoneNumber = req.query.phoneNumber;
 
-  var cipherText = encryptMessage(message, key);
+  var cipherMessage = encryptMessage(message, key);
   try {
-    sendEncryptedMessage(email, cipherText);
+    sendEncryptedMessage(email, cipherMessage);
     if (phoneNumber != "") sendKey(key, phoneNumber);
-    res.status(200).send(cipherText);
+    res.status(200).send(cipherMessage);
   } catch (error) {
     res.status(400).send(error);
   }
@@ -38,29 +39,29 @@ router.get("/encrypt", cors(corsOptions), async (req, res) => {
 
 //creating the second endpoint that manages decryption requests
 router.get("/decrypt", cors(corsOptions), async (req, res) => {
-  const cipherText = req.query.cipherText;
+  const cipherMessage = req.query.cipherMessage;
   const key = req.query.key;
-  var originalText = decryptMessage(cipherText, key);
+  var originalMessage = decryptMessage(cipherMessage, key);
 
   //error checking. If text is "", then encryption was unsuccessful
   if ((originalText = "")) {
     res.status(400).send("Could not decrypt message");
   } else {
-    res.status(200).send(originalText);
+    res.status(200).send(originalMessage);
   }
 });
 
 //encrypt using DES
 function encryptMessage(message, key) {
-  var cipherText = cryptoJS.DES.encrypt(message, key).toString();
-  return cipherText;
+  var cipherMessage = cryptoJS.DES.encrypt(message, key).toString();
+  return cipherMessage;
 }
 
 //decrypt using DES
-function decryptMessage(cipherText, key) {
-  var bytes = cryptoJS.DES.decrypt(cipherText, key);
-  var originalText = bytes.toString(cryptoJS.enc.Utf8);
-  return originalText;
+function decryptMessage(cipherMessage, key) {
+  var bytes = cryptoJS.DES.decrypt(cipherMessage, key);
+  var originalMessage = bytes.toString(cryptoJS.enc.Utf8);
+  return originalMessage;
 }
 
 //send the key via SMS
