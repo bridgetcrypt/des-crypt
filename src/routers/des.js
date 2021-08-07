@@ -69,7 +69,9 @@ function sendKey(key, phoneNumber) {
   client.messages
     .create({ body: key, from: twilioPhoneNumber, to: "+" + phoneNumber })
     .then((message) => console.log(message.sid))
-    .catch((e) => console.log(e));
+    .catch((error) => {
+      throw error;
+    });
 }
 
 //send the encrypted message via email
