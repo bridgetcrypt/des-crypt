@@ -23,16 +23,15 @@ const client = require("twilio")(accountSid, authToken);
 //creating the first endpoint that manages encryption requests
 router.get("/encrypt", cors(corsOptions), async (req, res) => {
   const message = req.query.message;
+  const key = req.query.key;
   const email = req.query.email;
   const phoneNumber = req.query.phoneNumber;
 
-  //Generate a random 4 digit OTP
-  const key = Math.floor(1000 + Math.random() * 9000);
   var cipherMessage = encryptMessage(message, key);
   try {
     sendEncryptedMessage(email, cipherMessage);
     if (phoneNumber != "") sendKey(key, phoneNumber);
-    res.status(200).send({ message: message, key: key });
+    res.status(200).send(cipherMessage);
   } catch (error) {
     res.status(400).send(error);
   }
